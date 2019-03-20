@@ -36,11 +36,6 @@ public class FlightController {
 		jet2.setId(2L);
 		jet2.setName("Jet2");
 		airplanes.put(jet2.getid(), jet2);
-		
-		Airplane jet3 = new Airplane();
-		jet3.setId(3L);
-		jet3.setName("Jet3");
-		airplanes.put(jet3.getid(), jet3);
 	}
 	
 	@GetMapping("/airplanes")
