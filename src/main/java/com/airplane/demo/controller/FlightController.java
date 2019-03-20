@@ -1,11 +1,17 @@
 package com.airplane.demo.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +24,48 @@ import com.airplane.demo.entity.AirportStatus;
 public class FlightController {
 	@Autowired
 //	private AirplaneRepository repository;
+	
+	private static Map<Long, Airplane> airplanes =  new HashMap<>();
+	static {
+		Airplane jet1 = new Airplane();
+		jet1.setId(1L);
+		jet1.setName("Jet1");
+		airplanes.put(jet1.getid(), jet1);
+		
+		Airplane jet2 = new Airplane();
+		jet2.setId(2L);
+		jet2.setName("Jet2");
+		airplanes.put(jet2.getid(), jet2);
+		
+		Airplane jet3 = new Airplane();
+		jet3.setId(3L);
+		jet3.setName("Jet3");
+		airplanes.put(jet3.getid(), jet3);
+	}
+	
+	@GetMapping("/airplanes")
+	public ResponseEntity<Object> getAirplanes() {
+		return ResponseEntity.ok().body(airplanes.values());
+	}
+	
+	@PostMapping("/airplanes/add")
+	public ResponseEntity<Object> addAirplanes(@RequestBody Airplane airplane) {
+		airplanes.put(airplane.getid(), airplane);
+		return ResponseEntity.ok().body("Airplane information added");
+	}
+	
+	@PutMapping("/airplanes/update/{id}")
+	public ResponseEntity<Object> updateAirplane(@PathVariable(value = "id") Long airplaneId, @RequestBody Airplane airplane) {
+		airplanes.remove(airplaneId);
+		airplanes.put(airplaneId, airplane);
+		return ResponseEntity.ok().body("Airplane information updated");
+	}
+	
+	@DeleteMapping("/airplanes/delete/{id}")
+	public ResponseEntity<Object> deleteAirplane(@PathVariable(value = "id") Long airplaneId) {
+		airplanes.remove(airplaneId);
+		return ResponseEntity.ok().body("Airplane information deleted");
+	}
 	
 	/**
 	 * Send Airplane for takeoff

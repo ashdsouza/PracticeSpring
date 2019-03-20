@@ -1,4 +1,4 @@
-package com.airplane.demo.springbootrestapi;
+package com.airplane.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,5 +9,4 @@ public class SpringBootRestApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootRestApiApplication.class, args);
 	}
-
 }
