@@ -2,7 +2,10 @@ package com.airplane.demo.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,16 +29,47 @@ public class FlightController {
 //	private AirplaneRepository repository;
 	
 	private static Map<Long, Airplane> airplanes =  new HashMap<>();
+	private static PriorityQueue<Airplane> waitingQ = new PriorityQueue<>();
+	
+	//Dummy Data
 	static {
-		Airplane jet1 = new Airplane();
-		jet1.setId(1L);
-		jet1.setName("Jet1");
-		airplanes.put(jet1.getid(), jet1);
+		Airplane jet1 = new Airplane.AirplaneBuilder(1, "Jet", "LANDING")
+                		.buildAirplane();
+		airplanes.put(jet1.getId(), jet1);
+		waitingQ.add(jet1);
 		
-		Airplane jet2 = new Airplane();
-		jet2.setId(2L);
-		jet2.setName("Jet2");
-		airplanes.put(jet2.getid(), jet2);
+		Airplane jet2 = new Airplane.AirplaneBuilder(2, "Boeing-747", "TAKEOFF")
+                		.whichLocation("California")
+                		.buildAirplane();
+		airplanes.put(jet2.getId(), jet2);
+		waitingQ.add(jet2);
+		
+		Airplane jet3 = new Airplane.AirplaneBuilder(3, "Boeing-890", "TAKEOFF")
+                		.whichLocation("Australia")
+                .		buildAirplane();
+		airplanes.put(jet3.getId(), jet3);
+		waitingQ.add(jet3);
+		
+		Airplane jet4 = new Airplane.AirplaneBuilder(4, "JetAir", "LANDING")
+                		.whichLocation("India")
+                		.buildAirplane();
+		airplanes.put(jet4.getId(), jet4);
+		waitingQ.add(jet4);
+	}
+	
+	//convert String to Airplane object using Builder Pattern 
+	public Airplane getObjectFromString(String str) throws JSONException {
+		JSONObject jsonObj=new JSONObject(str);
+		long id = Long.parseLong(jsonObj.getString("id"));
+		String name=jsonObj.getString("name");
+		String type=jsonObj.getString("type");
+		String loc = jsonObj.has("location") ? jsonObj.getString("location") : null;
+		
+		Airplane air = new Airplane.AirplaneBuilder(id, name, type)
+						.whichLocation(loc)
+						.buildAirplane();
+		
+		return air;
 	}
 	
 	@GetMapping("/airplanes")
@@ -44,14 +78,16 @@ public class FlightController {
 	}
 	
 	@PostMapping("/airplanes/add")
-	public ResponseEntity<Object> addAirplanes(@RequestBody Airplane airplane) {
-		airplanes.put(airplane.getid(), airplane);
+	public ResponseEntity<Object> addAirplanes(@RequestBody String airplaneString) throws JSONException {
+		Airplane airplane = getObjectFromString(airplaneString);
+		airplanes.put(airplane.getId(), airplane);
 		return ResponseEntity.ok().body("Airplane information added");
 	}
 	
 	@PutMapping("/airplanes/update/{id}")
-	public ResponseEntity<Object> updateAirplane(@PathVariable(value = "id") Long airplaneId, @RequestBody Airplane airplane) {
+	public ResponseEntity<Object> updateAirplane(@PathVariable(value = "id") Long airplaneId, @RequestBody String airplaneString) throws JSONException {
 		airplanes.remove(airplaneId);
+		Airplane airplane = getObjectFromString(airplaneString);
 		airplanes.put(airplaneId, airplane);
 		return ResponseEntity.ok().body("Airplane information updated");
 	}
