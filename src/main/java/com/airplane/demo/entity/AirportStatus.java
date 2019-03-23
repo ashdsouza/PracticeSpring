@@ -5,10 +5,10 @@ public class AirportStatus {
 	private Integer time;
 	private Integer inFlightTakeOff;
 	private Integer inFlightLanding;
-	private Integer waitingForTakeOff;
-	private Integer waitingForLanding;	
-	private Integer successfulTakeOff;
-	private Integer successfulLanding;
+	private String waitingForTakeOff;
+	private String waitingForLanding;	
+	private String successfulTakeOff;
+	private String successfulLanding;
 	
 	public Integer getTime() {
 		return time;
@@ -28,28 +28,28 @@ public class AirportStatus {
 	public void setInFlightLanding(Integer inFlightLanding) {
 		this.inFlightLanding = inFlightLanding;
 	}
-	public Integer getWaitingForTakeOff() {
+	public String getWaitingForTakeOff() {
 		return waitingForTakeOff;
 	}
-	public void setWaitingForTakeOff(Integer waitingForTakeOff) {
+	public void setWaitingForTakeOff(String waitingForTakeOff) {
 		this.waitingForTakeOff = waitingForTakeOff;
 	}
-	public Integer getWaitingForLanding() {
+	public String getWaitingForLanding() {
 		return waitingForLanding;
 	}
-	public void setWaitingForLanding(Integer waitingForLanding) {
+	public void setWaitingForLanding(String waitingForLanding) {
 		this.waitingForLanding = waitingForLanding;
 	}
-	public Integer getSuccessfulTakeOff() {
+	public String getSuccessfulTakeOff() {
 		return successfulTakeOff;
 	}
-	public void setSuccessfulTakeOff(Integer successfulTakeOff) {
+	public void setSuccessfulTakeOff(String successfulTakeOff) {
 		this.successfulTakeOff = successfulTakeOff;
 	}
-	public Integer getSuccessfulLanding() {
+	public String getSuccessfulLanding() {
 		return successfulLanding;
 	}
-	public void setSuccessfulLanding(Integer successfulLanding) {
+	public void setSuccessfulLanding(String successfulLanding) {
 		this.successfulLanding = successfulLanding;
 	}
 }

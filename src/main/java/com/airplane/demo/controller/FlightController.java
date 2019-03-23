@@ -90,7 +90,6 @@ public class FlightController {
 		if(airplane != null && airplane.getType() == AirplaneType.TAKEOFF) {
 			//Add Airplane to Waiting Queue
 			config.waitingQ().add(airplane);
-			config.getRunwayService().flightStatus();
 			config.getRunwayService().handleFlight();
 			//return message
 			return ResponseEntity.ok().body("Airplane " + airplaneId + " Set to takeoff");
@@ -98,28 +97,7 @@ public class FlightController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Airplane with ID " + airplaneId + " Does not exist");
 		}
 		//Check to see if airplane exists
-		//Airplane airplane = repository.findById(airplaneId).orElseThrow(() -> new Exception("Airplane not found :: " + airplaneId));
-		//while(entries in Waiting to TakeOff Queue)
-		//check to see if Runway is empty --> Check Inflight for Landing and TakeOff
-			//if both empty
-				//if Waiting for Landing is empty
-					//add yourself to Inflight TakeOff Queue
-					//wait 10 sec 
-					//add yourself to TakeOff complete List
-					//break of loop
-				//else 
-					//wait for (10 * #entries in Waiting Queue for Landing + 10 * #entries before you in Wating Queue for TakeOff) seconds
-					//check all above conditions again
-			//else if Inflight TakeOff Queue or Inflight Landing Queue is not empty
-				//wait for 10 sec
-				//check all above conditions again
-		
-		
-		
-		//Scenario 1: Airplane is first in Waiting, No plane in Inflight TakeOff and No Waiting for Landing and No Inflight Landing --> immediately move to Inflight
-		//Scenario 2: Airplane is first in Waiting, a plane in Inflight TakeOff --> wait for 10 seconds , check Scenario 3
-		//Scenario 3: Airplane is first in Waiting, No plane in Inflight TakeOff, a plane Waiting for Landing --> wait for 10 sec, check Scenario 4
-		//Scenario 4: Airplane is first in Waiting, No plane in Inflight TakeOff, No Waiting for Landing, a plane Inflight Landing --> wait 10 sec, check Scenario 1	
+		//Airplane airplane = repository.findById(airplaneId).orElseThrow(() -> new Exception("Airplane not found :: " + airplaneId));	
 	}
 	
 	/**
@@ -132,8 +110,6 @@ public class FlightController {
 		if(airplane != null && airplane.getType() == AirplaneType.LANDING) {
 			//Add Airplane to Waiting Queue
 			config.waitingQ().add(airplane);
-			System.out.println("Added to queue called handleFlight()");
-			config.getRunwayService().flightStatus();
 			config.getRunwayService().handleFlight();
 			//return true
 			return ResponseEntity.ok().body("Airplane " + airplaneId + " Set to land");
@@ -142,13 +118,6 @@ public class FlightController {
 		}
 		//Check to see if airplane exists
 		//Airplane airplane = repository.findById(airplaneId).orElseThrow(() -> new Exception("Airplane not found :: " + airplaneId));
-				
-		//Add yourself to Waiting to Land Queue
-		//check to see if Runway is empty --> Check Inflight for Landing and TakeOff
-		//Scenario 1: Airplane is first in Waiting, No plane in Inflight TakeOff and No Waiting for Landing and No Inflight Landing --> immediately move to Inflight
-		//Scenario 2: Airplane is first in Waiting, a plane in Inflight TakeOff --> wait for 10 seconds , check Scenario 3
-		//Scenario 3: Airplane is first in Waiting, No plane in Inflight TakeOff, a plane Waiting for Landing --> wait for 10 sec, check Scenario 4
-		//Scenario 4: Airplane is first in Waiting, No plane in Inflight TakeOff, No Waiting for Landing, a plane Inflight Landing --> wait 10 sec, check Scenario 1
 	}
 	
 	/**
@@ -156,20 +125,9 @@ public class FlightController {
 	 */
 	@GetMapping("/status")
 	public ResponseEntity<AirportStatus> statusOfFlights() {
-		AirportStatus status = new AirportStatus();
 		//get counts from all the Queues and Lists 
 		//set the entries in AirportStatus object
-		
-		status.setInFlightLanding(10);
-		status.setInFlightTakeOff(1);
-		status.setSuccessfulLanding(10);
-		status.setSuccessfulTakeOff(1);
-		status.setWaitingForLanding(5);
-		status.setWaitingForTakeOff(15);
-		status.setTime(5);
-		
-		//return object
-//		return ResponseEntity.ok().body(status);
+		AirportStatus status = config.getRunwayService().flightStatus();
 		return new ResponseEntity<>(status, HttpStatus.OK);
 	}
 	

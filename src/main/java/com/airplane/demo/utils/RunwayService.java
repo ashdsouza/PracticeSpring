@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.airplane.demo.bean.Config;
 import com.airplane.demo.entity.Airplane;
+import com.airplane.demo.entity.AirportStatus;
 import com.airplane.demo.utils.GlobalEnums.AirplaneType;
 import com.airplane.demo.utils.GlobalEnums.RunwayState;
 
@@ -21,20 +22,43 @@ public class RunwayService {
 		this.nums = nums;
 	}
 	
-	public void flightStatus() {
+	public AirportStatus flightStatus() {
+		AirportStatus status = new AirportStatus();
+		
 		if(!config.waitingQ().isEmpty()) {
-			String landing = "Waiting for takeoff ";
-			String takeoff = "Waiting for landing ";
+			String waitingLanding = "Waiting for landing ";
+			String waitingTakeoff = "Waiting for takeoff ";
 			for (Airplane item: config.waitingQ()) {
-				if(item.getType().equals(AirplaneType.LANDING)) {
-					landing = landing + item.getId() + " ";
+				if(item.getType() == AirplaneType.LANDING) {
+					waitingLanding = waitingLanding + item.getId() + " ";
 				} else {
-					takeoff = takeoff + item.getId() + " ";
+					waitingTakeoff = waitingTakeoff + item.getId() + " ";
 				}
 			}
+			status.setWaitingForLanding(waitingLanding);
+			status.setWaitingForTakeOff(waitingTakeoff);
 		} else {
-			System.out.println("No flights waiting");
+			status.setWaitingForLanding("Waiting for landing none");
+			status.setWaitingForTakeOff("Waiting for takeoff none");
 		}
+		
+		if(!config.completedQ().isEmpty()) {
+			String completedLanding = "Successful landing ";
+			String completedTakeoff = "Successful takeoff ";
+			for (Airplane item: config.completedQ()) {
+				if(item.getType() == AirplaneType.LANDING) {
+					completedLanding = completedLanding + item.getId() + " ";
+				} else {
+					completedTakeoff = completedTakeoff + item.getId() + " ";
+				}
+			}
+			status.setSuccessfulLanding(completedLanding);
+			status.setSuccessfulTakeOff(completedTakeoff);
+		}else {
+			status.setSuccessfulLanding("Successful landing none");
+			status.setSuccessfulTakeOff("Successful takeoff none");
+		}
+		return status;
 	}
 	
 	synchronized public void handleFlight() {
