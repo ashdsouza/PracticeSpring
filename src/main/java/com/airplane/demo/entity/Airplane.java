@@ -81,19 +81,20 @@ public class Airplane implements Comparable<Airplane> {
         return "Airplane ID = " + this.id + " Name = " + this.name + " Type = " + this.type + " Priority = " + this.priority + " Location = " + this.location;
     }
     
+    //check if they are same Type Landing or Takeoff
+    //if same then check the priority-level
+  		//if same then return 0
+      	//else return a.priority - this.priority for descending order
+    //else 
+  	//if "this" is Landing return -1 for descending order
+  	//else return 1
     @Override
     public int compareTo(Airplane a) {
-    	if(this.getType().equals(a.getType())) {
-            // System.out.println("A1 = " + this.getPriority() + " A2 = " + a.getPriority());
-            // System.out.println("Same type");
-            // if(this.getPriority() > a.getPriority()) return 1;
-            // else if(this.getPriority() < a.getPriority()) return -1;
-            // else return 0;
+    	if(this.getType() == a.getType()) {
             return a.getPriority() - this.getPriority();
         } else {
-            // System.out.println("Diff type");
-            if(this.getType().equals(AirplaneType.LANDING)) return 1;
-            else if(a.getType().equals(AirplaneType.LANDING)) return -1;
+            if(this.getType() == AirplaneType.LANDING) return -1;
+            else if(a.getType() == AirplaneType.LANDING) return 1;
             else return 0;
         }
     }
